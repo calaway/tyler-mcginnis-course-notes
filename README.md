@@ -134,3 +134,124 @@ function HelloWorld (props) {
   )
 }
 ```
+
+## The Component Lifecycle
+### The Component Lifecycle
+The component lifecycle can be broken down into three parts:
+1. Mounting: When the component gets added to the DOM.
+1. Updating: When the copmonent updates its state or receives new data via props.
+1. Unmounting: When the component gets removed from the DOM.
+
+Tools:
+
+`constructor` is used to set initial state.
+
+`componentDidMount` is invoked once when the component is mounted to the DOM.
+
+`componentDidUpdate` is invoked every time the state or props change.
+
+`componentWillUnmount` will be invoked once right before a component is unmounted from the DOM.
+
+## Handling Form State
+### Forms in React: Controlled vs Uncontrolled Components
+In an uncontrolled component, the state is managed by the DOM, as usual. It can be accessed by React once it is submitted. This is _not_ the React way.
+
+In a controlled component, the state of the form lives within the React state. This is the React way and gives full control within React.
+
+## Building Reusable Components
+### Default Props
+Class component example:
+```js
+class StarRating extends React.Component {
+  ...
+}
+
+StarRating.defaultProps = {
+  color: '#ECB244'
+}
+```
+
+Function component example:
+```js
+function StarRating ({ color = '#ECB244' }) {
+  ...
+}
+```
+
+## Code Sharing
+### Higher Order Components
+When you pass a function as an argument, that function is called a __callback function__. The function you're passing the callback function to is called a **higher-order function**.
+
+### Hover Render Prop
+We were able to accomplish the same thing with a Hover render prop that we were with a Higher Order Component.
+
+Tyler prefers render props over HOC. Tyler prefers passing the render prop as a child rather than a prop.
+
+## Better Classes with Class Fields
+### Class Fields
+Class fields are currently a stage 3 ECMAScript proposal. To use them, first install this babel pluggin:
+```
+npm install --save-dev @babel/plugin-proposal-class-properties
+```
+Then add this to `package.json`
+```json
+  "babel": {
+    "plugins": [
+      "@babel/plugin-proposal-class-properties"
+    ]
+```
+Then this class
+```js
+class PlayerInput extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      username: ''
+    }
+
+    this.handleChange = this.handleChange.bind(this)
+  }
+  handleChange(event) {
+    this.setState({
+      username: event.target.value
+    })
+  }
+  render() {
+    ...
+  }
+}
+
+PlayerInput.propTypes = {
+  id: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+}
+
+PlayerInput.defaultProps = {
+  label: 'Username',
+}
+```
+can be refactored to
+```js
+class PlayerInput extends Component {
+  static propTypes = {
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+  }
+  static defaultProps = {
+    label: 'Username'
+  }
+  state = {
+    username: ''
+  }
+  handleChange = (event) => {
+    this.setState({
+      username: event.target.value
+    })
+  }
+  render() {
+    ...
+  }
+}
+```
