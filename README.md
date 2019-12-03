@@ -1,9 +1,5 @@
 # Tyler McGinnis React Course
 
-## Questions
-https://tm.dev/react-course-project gives a 404 page, but\
-https://tm.dev/react-course-project/ is valid
-
 ## Course Overview
 ### Introduction, Philosiphy, and Tips
 Philosophy: Ideal education happens when __mastery is fixed__, but __time spent__ to attain mastery __is variable__. Traditional education often gets this backward.
