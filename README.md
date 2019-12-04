@@ -251,3 +251,85 @@ class PlayerInput extends Component {
   }
 }
 ```
+
+# React Hooks Course
+## Managing State with Hooks
+### The useState Hook
+Before:
+```js
+class Theme extends React.Component {
+  state = {
+    theme: "light"
+  }
+  toDark = () => this.setState({ theme: "dark" })
+  toLight = () => this.setState({ theme: "light" })
+  render() {
+    const { theme } = this.state
+
+    return (
+      <div className={theme}>
+        {theme === "light"
+          ? <button onClick={this.toDark}>🔦</button>
+          : <button onClick={this.toLight}>💡</button>}
+      </div>
+    )
+  }
+}
+```
+After:
+```js
+function Theme () {
+  const [theme, setTheme] = React.useState('light')
+
+  const toDark = () => setTheme('dark')
+  const toLight = () => setTheme('light')
+
+  return (
+    <div className={theme}>
+      {theme === "light"
+        ? <button onClick={toDark}>🔦</button>
+        : <button onClick={toLight}>💡</button>}
+    </div>
+  )
+}
+```
+
+As a best practice, each piece of state should be tracked separately, unlike with `setState` before. If the most logical data type for a piece of your state is an object, consider using `useReducer` hook.
+
+## Adding Side Effects
+### The useEffect Hook
+A side effect is a state change that can be observed outside its local environment.
+> "A side effect is anything that interacts with the outside world (in our case, “outside” meaning outside of the local function that’s being executed). Mutating non-local variables, making network requests, and updating the DOM are all examples of common side effects."
+
+> "Whenever you want to interact with the world outside of React (whether that’s to make a network request, manually update the DOM, etc.), you’d reach for useEffect."
+
+__Cleaning up side effects:__
+If you return a function from useEffect, React will make sure that function is invoked in two scenarios:
+1. Right before the component is removed from the DOM
+1. Before any re-render that re-invokes your useEffect
+
+In this example we will subscribe to a websocket when the component loads and again whenever the user name is changed. It will cleanup by unsubscribing whenever the component is unmounted or when the username is changed, just before subscribing to the new username.
+```js
+import { subscribe, unsubscribe } from './api'
+
+function Profile ({ username }) {
+  const [profile, setProfile] = React.useState(null)
+
+  React.useEffect(() => {
+    subscribe(username, setProfile)
+
+    return () => {
+      unsubscribe(username)
+      setProfile(null)
+    }
+  }, [username])
+
+  if (profile === null) {
+    return <p>Loading...</p>
+  }
+
+  return (
+    // ...
+  );
+}
+```
